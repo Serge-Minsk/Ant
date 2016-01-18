@@ -5,16 +5,24 @@
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
-
+    <property name="chkstyle.dir" value="${build.dir}/chkstyle"/>
     <property name="main-class"  value="nl.elridge.sudoku.view.Sudoku"/>
-
-
+    <property name="main-class"  value="nl.elridge.sudoku.view.Sudoku"/>
+    <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties"
+         classpath="/usr/local/apache-ant-1.9.6/lib/checkstyle-6.14.1-all.jar"/>
+    <target name="chkstyle">
+    <mkdir dir="${chkstyle.dir}"/>
+    <checkstyle    config="sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
+    <fileset dir="${src.dir}" includes="**/*.java"/>
+    <formatter type="xml" toFile="build/chkstyle/checkstyle_errors.xml"/>
+    </checkstyle>
+    </target>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="compile">
+    <target name="compile" depends="chkstyle">
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
     </target>
